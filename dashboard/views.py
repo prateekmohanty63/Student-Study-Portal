@@ -217,12 +217,16 @@ def books(request):
 
 def dictionary(request):
     if request.method=="POST":
+        p=""
         form=DashboardForm(request.POST)
         text=request.POST['text']
         url="https://api.dictionaryapi.dev/api/v2/entries/en_US/"+text
         r=requests.get(url)
+        print(r)
         answer=r.json()
+        print(answer)
         try:
+            p="input"
             phonetics=answer[0]['phonetics'][0]['text']
             audio=answer[0]['phonetics'][0]['audio']
             definition=answer[0]['meanings'][0]['definitions'][0]['definition']
@@ -237,6 +241,7 @@ def dictionary(request):
                 'example':example,
                 'synonyms':synonyms
             }
+            # print(context)
         except:
             context={
                 'form':form,
@@ -245,9 +250,9 @@ def dictionary(request):
         return render(request,'dashboard/dictionary.html',context)
     else:
         form=DashboardForm()
-        context={'form':form}
+        context1={'form':form}
    
-    return render(request,'dashboard/dictionary.html',context)
+    return render(request,'dashboard/dictionary.html',context1)
 
 def wiki(request):
     if request.method=='POST':
@@ -272,11 +277,11 @@ def wiki(request):
 def conversion(request):
     if request.method=="POST":
         form=ConversionForm(request.POST)
-        if request.POST['measurment']=='length':
-            measurment_form=ConversionLengthForm()
+        if request.POST['measurement']=='length':
+            measurement_form=ConversionLengthForm()
             context={
                 'form':form,
-                'm_form':measurment_form,
+                'm_form':measurement_form,
                 'input':True
             }
             if 'input' in request.POST:
@@ -291,16 +296,16 @@ def conversion(request):
                         answer=f'{input} foot={int(input)/3} yard'
                 context={
                     'form':form,
-                    'm_form':measurment_form,
+                    'm_form':measurement_form,
                     'input':True,
                     'answer':answer
                 }
 
-        if request.POST['measurment']=='mass':
-            measurment_form=ConversionMassForm()
+        if request.POST['measurement']=='mass':
+            measurement_form=ConversionMassForm()
             context={
                 'form':form,
-                'm_form':measurment_form,
+                'm_form':measurement_form,
                 'input':True
             }
             if 'input' in request.POST:
@@ -315,7 +320,7 @@ def conversion(request):
                         answer=f'{input} kilogram={int(input)*2.20462} pound'
                 context={
                     'form':form,
-                    'm_form':measurment_form,
+                    'm_form':measurement_form,
                     'input':True,
                     'answer':answer
                 }

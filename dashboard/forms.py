@@ -27,7 +27,7 @@ class TodoForm(forms.ModelForm):
         fields=['title','is_finished']
 
 class ConversionForm(forms.Form):
-    CHOICES=[('length','length'),('mass','Mass')]
+    CHOICES=[('length','Length'),('mass','Mass')]
     measurement=forms.ChoiceField(choices=CHOICES,widget=forms.RadioSelect)
 
 class ConversionLengthForm(forms.Form):
