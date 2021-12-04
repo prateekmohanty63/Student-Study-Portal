@@ -217,36 +217,45 @@ def books(request):
 
 def dictionary(request):
     if request.method=="POST":
-        p=""
         form=DashboardForm(request.POST)
         text=request.POST['text']
         url="https://api.dictionaryapi.dev/api/v2/entries/en_US/"+text
         r=requests.get(url)
-        print(r)
         answer=r.json()
-        print(answer)
-        try:
-            p="input"
-            phonetics=answer[0]['phonetics'][0]['text']
-            audio=answer[0]['phonetics'][0]['audio']
-            definition=answer[0]['meanings'][0]['definitions'][0]['definition']
-            example=answer[0]['meanings'][0]['text']['definitions'][0]['example']
-            synonyms=answer[0]['meanings'][0]['definitions'][0]['synonyms']
-            context={
+        result_list=[]
+        print("In")
+        p="input"
+        phonetics=answer[0]['phonetics'][0]['text']
+        audio=answer[0]['phonetics'][0]['audio']
+        definition=answer[0]['meanings'][0]['definitions'][0]['definition']
+        # example=answer[0]['meanings'][0]['definitions'][0]['example']
+        synonyms=answer[0]['meanings'][0]['definitions'][0]['synonyms']
+        context={
+                'url':url,
                 'form':form,
                 'input':text,
                 'phonetics':phonetics,
                 'audio':audio,
                 'definition':definition,
-                'example':example,
+                # 'example':example,
                 'synonyms':synonyms
             }
+        context2={
+            'form':form,
+            'results':result_list
+        }
+        result_list.append(context)
+        print(url)
+        print(text)
             # print(context)
-        except:
-            context={
-                'form':form,
-                input:''
-            }
+        return render(request,'dashboard/dictionary.html',context)
+          
+        # except:
+        #     print("sai")
+        #     context={
+        #         'form':form,
+        #         input:''
+        #     }
         return render(request,'dashboard/dictionary.html',context)
     else:
         form=DashboardForm()
@@ -314,7 +323,7 @@ def conversion(request):
                 input =request.POST['input']
                 answer=''
                 if input and int(input)>=0:
-                    if first=='pound' and second=='Kilogram':
+                    if first=='pound' and second=='kilogram':
                         answer=f'{input} pound={int(input)*0.453592} kilogram'
                     if first=='kilogram' and second=='pound':
                         answer=f'{input} kilogram={int(input)*2.20462} pound'
